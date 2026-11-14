@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Доставка Еды</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Экран входа (Лаба 13) -->
+    <div id="auth-screen" class="screen active">
+        <div class="auth-box">
+            <h2>Вход в Доставку</h2>
+            <input type="text" id="login-input" placeholder="Логин (anna)">
+            <input type="password" id="password-input" placeholder="Пароль (1234)">
+            <button onclick="login()">Войти</button>
+            <p id="auth-error" class="error"></p>
+        </div>
+    </div>
+
+    <!-- Основной экран -->
+    <div id="app-screen" class="screen">
+        <!-- Шапка с переключателем ролей -->
+        <header>
+            <div class="roles">
+                <button class="role-btn active" onclick="switchRole('client')">Клиент</button>
+                <button class="role-btn" onclick="switchRole('manager')">Менеджер</button>
+                <button class="role-btn" onclick="switchRole('security')">Охранник</button>
+            </div>
+            <button class="logout-btn" onclick="logout()">Выйти</button>
+        </header>
+
+        <!-- Нижняя панель навигации -->
+        <nav class="bottom-nav">
+            <button onclick="showTab('menu')" class="active" id="nav-menu">Меню</button>
+            <button onclick="showTab('cart')" id="nav-cart">Корзина (<span id="cart-count">0</span>)</button>
+            <button onclick="showTab('orders')" id="nav-orders">Заказы</button>
+            <button onclick="showTab('news')" id="nav-news">Новости</button>
+            <button onclick="showTab('guide')" id="nav-guide">Инфо</button>
+        </nav>
+
+        <!-- Вкладка: Меню (Лаба 3, 9) -->
+        <div id="tab-menu" class="tab active">
+            <h2>Меню блюд</h2>
+            <input type="text" id="search-input" placeholder="Поиск блюда..." oninput="filterMenu()">
+            <div id="dish-list" class="grid"></div>
+            <button class="checkout-btn" onclick="addSelectedToCart()">Добавить в корзину</button>
+        </div>
+
+        <!-- Вкладка: Корзина -->
+        <div id="tab-cart" class="tab">
+            <h2>Корзина</h2>
+            <div id="cart-list"></div>
+            <textarea id="wish-input" placeholder="Пожелания к заказу..."></textarea>
+            <button class="checkout-btn" onclick="checkout()">Оформить заказ</button>
+        </div>
+
+        <!-- Вкладка: Заказы (Лаба 8) -->
+        <div id="tab-orders" class="tab">
+            <h2>Мои заказы</h2>
+            <div id="orders-list"></div>
+        </div>
+
+        <!-- Вкладка: Новости (Лаба 10) -->
+        <div id="tab-news" class="tab">
+            <h2>Новости и акции</h2>
+            <div id="news-list" class="grid"></div>
+        </div>
+
+        <!-- Вкладка: Руководство (Лаба 17) -->
+        <div id="tab-guide" class="tab">
+            <h2>Руководство</h2>
+            <div class="guide-item"><b>1. Авторизация</b><p>Войдите с логином 'anna' и паролем '1234'.</p></div>
+            <div class="guide-item"><b>2. Меню</b><p>Выберите блюда галочками и нажмите 'Добавить'.</p></div>
+            <div class="guide-item"><b>3. Корзина</b><p>Оставьте пожелания и оформите заказ.</p></div>
+        </div>
+
+        <!-- Панель Менеджера/Охранника (Лаба 14) -->
+        <div id="manager-panel" class="panel hidden">
+            <h3>Панель управления</h3>
+            <button onclick="scanQR()">Сканировать QR (Камера)</button>
+            <div id="scan-result"></div>
+        </div>
+    </div>
+
+    <!-- Подключение скрипта -->
+    <script src="script.js"></script>
+</body>
+</html>
