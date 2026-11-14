@@ -39,6 +39,7 @@ function switchRole(role) {
     currentRole = role;
     document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
     if (event && event.target) event.target.classList.add('active');
+    
     const managerPanel = document.getElementById('manager-panel');
     if (role === 'manager' || role === 'security') {
         managerPanel.classList.remove('hidden');
@@ -111,6 +112,7 @@ function checkout() {
     if (cart.length === 0) return alert("Корзина пуста!");
     const total = cart.reduce((sum, item) => sum + item.price, 0);
     const wish = document.getElementById('wish-input').value;
+    
     orders.push({ id: Date.now(), total: total, wish: wish, status: 'new' });
     cart = [];
     document.getElementById('wish-input').value = '';
@@ -124,15 +126,35 @@ function renderOrders() {
     const container = document.getElementById('orders-list');
     container.innerHTML = '';
     orders.forEach(order => {
-        let statusText = order.status === 'new' ? 'Новый' : 'Доставлен';
+        let statusText = '';
+        let statusClass = '';
+        if (currentRole === 'manager') {
+            statusText = `<select onchange="changeStatus(${order.id}, this.value)">
+                <option value="new" ${order.status === 'new' ? 'selected' : ''}>Новый</option>
+                <option value="cooking" ${order.status === 'cooking' ? 'selected' : ''}>Готовится</option>
+                <option value="delivering" ${order.status === 'delivering' ? 'selected' : ''}>В пути</option>
+                <option value="done" ${order.status === 'done' ? 'selected' : ''}>Доставлен</option>
+            </select>`;
+        } else {
+            statusText = order.status === 'new' ? 'Новый' : order.status === 'cooking' ? 'Готовится' : order.status === 'delivering' ? 'В пути' : 'Доставлен';
+            statusClass = `status-${order.status}`;
+        }
+
         container.innerHTML += `
             <div class="order-card">
                 <b>Заказ №${order.id.toString().slice(-4)}</b>
                 <p>Сумма: ${order.total} ₽</p>
-                <p>Статус: <span class="status-${order.status}">${statusText}</span></p>
+                ${order.wish ? `<p>Пожелание: ${order.wish}</p>` : ''}
+                <p>Статус: <span class="${statusClass}">${statusText}</span></p>
             </div>
         `;
     });
+}
+
+function changeStatus(orderId, newStatus) {
+    const order = orders.find(o => o.id === orderId);
+    if (order) order.status = newStatus;
+    renderOrders();
 }
 
 function scanQR() {
