@@ -1,0 +1,231 @@
+* { 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', Tahoma, sans-serif; 
+    margin: 0; 
+    padding: 0; 
+}
+
+body { 
+    background: #f4f4f4; 
+    display: flex; 
+    justify-content: center; 
+    height: 100vh; 
+}
+
+#app-screen, #auth-screen { 
+    width: 100%; 
+    max-width: 400px; 
+    height: 100vh; 
+    background: #fff; 
+    position: relative; 
+    display: none; 
+    flex-direction: column; 
+    overflow: hidden; 
+    box-shadow: 0 0 20px rgba(0,0,0,0.1); 
+}
+
+.screen.active { 
+    display: flex; 
+}
+
+/* Авторизация */
+.auth-box { 
+    margin: auto; 
+    padding: 20px; 
+    text-align: center; 
+    width: 100%; 
+}
+
+.auth-box input { 
+    width: 100%; 
+    padding: 12px; 
+    margin: 8px 0; 
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+}
+
+.auth-box button { 
+    width: 100%; 
+    padding: 12px; 
+    background: #ff6b35; 
+    color: #fff; 
+    border: none; 
+    border-radius: 8px; 
+    font-size: 16px; 
+    cursor: pointer; 
+}
+
+.error { 
+    color: red; 
+    font-size: 14px; 
+    margin-top: 10px; 
+}
+
+/* Шапка */
+header { 
+    padding: 10px; 
+    background: #fff; 
+    border-bottom: 1px solid #eee; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.roles { 
+    display: flex; 
+    gap: 5px; 
+}
+
+.role-btn { 
+    padding: 5px 10px; 
+    border: 1px solid #ddd; 
+    border-radius: 15px; 
+    background: #fff; 
+    cursor: pointer; 
+    font-size: 12px; 
+}
+
+.role-btn.active { 
+    background: #ff6b35; 
+    color: #fff; 
+    border-color: #ff6b35; 
+}
+
+.logout-btn { 
+    background: none; 
+    border: none; 
+    color: #ff6b35; 
+    cursor: pointer; 
+    font-weight: bold; 
+}
+
+/* Контент */
+.tab { 
+    display: none; 
+    padding: 15px; 
+    flex: 1; 
+    overflow-y: auto; 
+    padding-bottom: 70px; 
+}
+
+.tab.active { 
+    display: block; 
+}
+
+/* Карточки блюд */
+.grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 10px; 
+}
+
+.dish-card { 
+    border: 1px solid #eee; 
+    border-radius: 10px; 
+    padding: 10px; 
+    text-align: center; 
+    cursor: pointer; 
+    position: relative; 
+}
+
+.dish-card img { 
+    width: 100%; 
+    height: 80px; 
+    object-fit: cover; 
+    border-radius: 8px; 
+}
+
+.dish-card.selected { 
+    border: 2px solid #ff6b35; 
+    background: #fff8f5; 
+}
+
+.dish-card b { 
+    display: block; 
+    margin-top: 5px; 
+}
+
+.price { 
+    color: #ff6b35; 
+    font-weight: bold; 
+}
+
+/* Корзина */
+.cart-item { 
+    display: flex; 
+    justify-content: space-between; 
+    padding: 10px; 
+    border-bottom: 1px solid #eee; 
+}
+
+textarea { 
+    width: 100%; 
+    padding: 10px; 
+    margin-top: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    height: 60px; 
+}
+
+.checkout-btn { 
+    width: 100%; 
+    padding: 12px; 
+    background: #ff6b35; 
+    color: #fff; 
+    border: none; 
+    border-radius: 8px; 
+    margin-top: 10px; 
+    font-size: 16px; 
+    cursor: pointer; 
+}
+
+/* Заказы и Новости */
+.order-card, .news-card { 
+    border: 1px solid #eee; 
+    padding: 15px; 
+    border-radius: 10px; 
+    margin-bottom: 10px; 
+}
+
+.status-new { color: red; font-weight: bold; }
+.status-cooking { color: orange; font-weight: bold; }
+.status-delivering { color: blue; font-weight: bold; }
+.status-done { color: green; font-weight: bold; }
+
+/* Нижняя панель */
+.bottom-nav { 
+    position: absolute; 
+    bottom: 0; 
+    width: 100%; 
+    display: flex; 
+    background: #fff; 
+    border-top: 1px solid #eee; 
+}
+
+.bottom-nav button { 
+    flex: 1; 
+    padding: 15px 0; 
+    border: none; 
+    background: none; 
+    font-size: 12px; 
+    color: #888; 
+    cursor: pointer; 
+}
+
+.bottom-nav button.active { 
+    color: #ff6b35; 
+    font-weight: bold; 
+    border-top: 3px solid #ff6b35; 
+}
+
+/* Панель менеджера */
+.panel { 
+    padding: 15px; 
+    background: #f0f0f0; 
+    border-radius: 10px; 
+    margin: 10px; 
+}
+
+.hidden { 
+    display: none; 
+}
