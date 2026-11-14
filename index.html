@@ -4,10 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Доставка Еды</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; }
+        body { background: #f4f4f4; display: flex; justify-content: center; height: 100vh; }
+        #app-screen, #auth-screen { width: 100%; max-width: 400px; height: 100vh; background: #fff; position: relative; display: none; flex-direction: column; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .screen.active { display: flex; }
+        .auth-box { margin: auto; padding: 20px; text-align: center; width: 100%; }
+        .auth-box input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; }
+        .auth-box button { width: 100%; padding: 12px; background: #ff6b35; color: #fff; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        .error { color: red; font-size: 14px; margin-top: 10px; }
+        header { padding: 10px; background: #fff; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .roles { display: flex; gap: 5px; }
+        .role-btn { padding: 5px 10px; border: 1px solid #ddd; border-radius: 15px; background: #fff; cursor: pointer; font-size: 12px; }
+        .role-btn.active { background: #ff6b35; color: #fff; border-color: #ff6b35; }
+        .logout-btn { background: none; border: none; color: #ff6b35; cursor: pointer; font-weight: bold; }
+        .tab { display: none; padding: 15px; flex: 1; overflow-y: auto; padding-bottom: 70px; }
+        .tab.active { display: block; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .dish-card { border: 1px solid #eee; border-radius: 10px; padding: 10px; text-align: center; cursor: pointer; }
+        .dish-card.selected { border: 2px solid #ff6b35; background: #fff8f5; }
+        .price { color: #ff6b35; font-weight: bold; }
+        .cart-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+        textarea { width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 8px; height: 60px; }
+        .checkout-btn { width: 100%; padding: 12px; background: #ff6b35; color: #fff; border: none; border-radius: 8px; margin-top: 10px; font-size: 16px; cursor: pointer; }
+        .order-card, .news-card { border: 1px solid #eee; padding: 15px; border-radius: 10px; margin-bottom: 10px; }
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; display: flex; background: #fff; border-top: 1px solid #eee; }
+        .bottom-nav button { flex: 1; padding: 15px 0; border: none; background: none; font-size: 12px; color: #888; cursor: pointer; }
+        .bottom-nav button.active { color: #ff6b35; font-weight: bold; border-top: 3px solid #ff6b35; }
+    </style>
 </head>
 <body>
-    <!-- Экран входа (Лаба 13) -->
     <div id="auth-screen" class="screen active">
         <div class="auth-box">
             <h2>Вход в Доставку</h2>
@@ -17,73 +43,42 @@
             <p id="auth-error" class="error"></p>
         </div>
     </div>
-
-    <!-- Основной экран -->
     <div id="app-screen" class="screen">
-        <!-- Шапка с переключателем ролей -->
         <header>
             <div class="roles">
                 <button class="role-btn active" onclick="switchRole('client')">Клиент</button>
                 <button class="role-btn" onclick="switchRole('manager')">Менеджер</button>
-                <button class="role-btn" onclick="switchRole('security')">Охранник</button>
             </div>
             <button class="logout-btn" onclick="logout()">Выйти</button>
         </header>
-
-        <!-- Нижняя панель навигации -->
         <nav class="bottom-nav">
-            <button onclick="showTab('menu')" class="active" id="nav-menu">Меню</button>
-            <button onclick="showTab('cart')" id="nav-cart">Корзина (<span id="cart-count">0</span>)</button>
-            <button onclick="showTab('orders')" id="nav-orders">Заказы</button>
-            <button onclick="showTab('news')" id="nav-news">Новости</button>
-            <button onclick="showTab('guide')" id="nav-guide">Инфо</button>
+            <button onclick="showTab('menu')" class="active">Меню</button>
+            <button onclick="showTab('cart')">Корзина</button>
+            <button onclick="showTab('orders')">Заказы</button>
+            <button onclick="showTab('news')">Новости</button>
         </nav>
-
-        <!-- Вкладка: Меню (Лаба 3, 9) -->
-        <div id="tab-menu" class="tab active">
-            <h2>Меню блюд</h2>
-            <input type="text" id="search-input" placeholder="Поиск блюда..." oninput="filterMenu()">
-            <div id="dish-list" class="grid"></div>
-            <button class="checkout-btn" onclick="addSelectedToCart()">Добавить в корзину</button>
-        </div>
-
-        <!-- Вкладка: Корзина -->
-        <div id="tab-cart" class="tab">
-            <h2>Корзина</h2>
-            <div id="cart-list"></div>
-            <textarea id="wish-input" placeholder="Пожелания к заказу..."></textarea>
-            <button class="checkout-btn" onclick="checkout()">Оформить заказ</button>
-        </div>
-
-        <!-- Вкладка: Заказы (Лаба 8) -->
-        <div id="tab-orders" class="tab">
-            <h2>Мои заказы</h2>
-            <div id="orders-list"></div>
-        </div>
-
-        <!-- Вкладка: Новости (Лаба 10) -->
-        <div id="tab-news" class="tab">
-            <h2>Новости и акции</h2>
-            <div id="news-list" class="grid"></div>
-        </div>
-
-        <!-- Вкладка: Руководство (Лаба 17) -->
-        <div id="tab-guide" class="tab">
-            <h2>Руководство</h2>
-            <div class="guide-item"><b>1. Авторизация</b><p>Войдите с логином 'anna' и паролем '1234'.</p></div>
-            <div class="guide-item"><b>2. Меню</b><p>Выберите блюда галочками и нажмите 'Добавить'.</p></div>
-            <div class="guide-item"><b>3. Корзина</b><p>Оставьте пожелания и оформите заказ.</p></div>
-        </div>
-
-        <!-- Панель Менеджера/Охранника (Лаба 14) -->
-        <div id="manager-panel" class="panel hidden">
-            <h3>Панель управления</h3>
-            <button onclick="scanQR()">Сканировать QR (Камера)</button>
-            <div id="scan-result"></div>
-        </div>
+        <div id="tab-menu" class="tab active"><h2>Меню</h2><div id="dish-list" class="grid"></div><button class="checkout-btn" onclick="addToCart()">Добавить</button></div>
+        <div id="tab-cart" class="tab"><h2>Корзина</h2><div id="cart-list"></div><button class="checkout-btn" onclick="checkout()">Оформить</button></div>
+        <div id="tab-orders" class="tab"><h2>Заказы</h2><div id="orders-list"></div></div>
+        <div id="tab-news" class="tab"><h2>Новости</h2><div class="news-card"><b>Скидка 20%</b></div></div>
     </div>
-
-    <!-- Подключение скрипта -->
-    <script src="script.js"></script>
+    <script>
+        const dishes = [{id:1,name:"Пицца",price:550},{id:2,name:"Бургер",price:320},{id:3,name:"Суши",price:890},{id:4,name:"Паста",price:410}];
+        let cart=[], orders=[], selected=[], role='client';
+        function login() {
+            const l = document.getElementById('login-input').value;
+            const p = document.getElementById('password-input').value;
+            if(l==='anna'&&p==='1234'){document.getElementById('auth-screen').classList.remove('active');document.getElementById('app-screen').classList.add('active');renderMenu();}
+            else{document.getElementById('auth-error').textContent="Неверный логин или пароль";}
+        }
+        function logout(){document.getElementById('app-screen').classList.remove('active');document.getElementById('auth-screen').classList.add('active');}
+        function showTab(id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active');}
+        function switchRole(r){role=r;}
+        function renderMenu(){const c=document.getElementById('dish-list');c.innerHTML='';dishes.forEach(d=>{c.innerHTML+=`<div class="dish-card ${selected.includes(d.id)?'selected':''}" onclick="toggle(${d.id})"><b>${d.name}</b><br><span class="price">${d.price} ₽</span></div>`;});}
+        function toggle(id){if(selected.includes(id))selected=selected.filter(i=>i!==id);else selected.push(id);renderMenu();}
+        function addToCart(){selected.forEach(id=>cart.push(dishes.find(d=>d.id===id)));selected=[];renderMenu();alert("Добавлено!");}
+        function checkout(){if(!cart.length)return alert("Пусто!");orders.push({total:cart.reduce((s,i)=>s+i.price,0)});cart=[];renderOrders();showTab('orders');alert("Оформлено!");}
+        function renderOrders(){const c=document.getElementById('orders-list');c.innerHTML='';orders.forEach(o=>{c.innerHTML+=`<div class="order-card">Заказ на ${o.total} ₽</div>`;});}
+    </script>
 </body>
 </html>
